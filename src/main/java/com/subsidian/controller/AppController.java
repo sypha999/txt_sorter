@@ -25,12 +25,12 @@ public class AppController {
 
     @GetMapping(value = "/sort",produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
     public @ResponseBody Resource sort_file(@RequestBody MultipartFile file) throws IOException {
-        File my_file = new File("my_file");
-        try(OutputStream outputStream = new FileOutputStream(my_file)){
+        File my_file = new File("my_file"); //create dummyfile
+        try(OutputStream outputStream = new FileOutputStream(my_file)){ //write multipart file to dummy file
             outputStream.write(file.getBytes());
         }
-        File f = appService.sortFile(my_file);
-        InputStream inputStream = new FileInputStream(f);
-        return new ByteArrayResource(IOUtils.toByteArray(inputStream));
+        File f = appService.sortFile(my_file); //pass dummy file for sorting
+        InputStream inputStream = new FileInputStream(f); //pass sorted file to an input stream
+        return new ByteArrayResource(IOUtils.toByteArray(inputStream),"sorted_file.txt"); //return input stream as text file for download
     }
 }
