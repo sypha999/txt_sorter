@@ -2,6 +2,8 @@ package com.subsidian.controller;
 
 import com.subsidian.services.serviceImpl.AppServiceImpl;
 import org.apache.commons.io.IOUtils;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.core.io.Resource;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -21,15 +23,14 @@ public class AppController {
         this.appService = appService;
     }
 
-    @PostMapping(value = "/sort",produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
-    public @ResponseBody byte[] sort_file(@RequestBody MultipartFile file) throws IOException {
+    @GetMapping(value = "/sort",produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
+    public @ResponseBody Resource sort_file(@RequestBody MultipartFile file) throws IOException {
         File my_file = new File("my_file");
         try(OutputStream outputStream = new FileOutputStream(my_file)){
             outputStream.write(file.getBytes());
         }
         File f = appService.sortFile(my_file);
         InputStream inputStream = new FileInputStream(f);
-        return  IOUtils.toByteArray(inputStream);
-
+        return new ByteArrayResource(IOUtils.toByteArray(inputStream));
     }
 }
